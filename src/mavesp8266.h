@@ -54,6 +54,7 @@ class MavESP8266Parameters;
 class MavESP8266Component;
 class MavESP8266Vehicle;
 class MavESP8266GCS;
+class MavOSD;
 
 #define DEFAULT_UART_SPEED          921600
 #define DEFAULT_WIFI_CHANNEL        11
@@ -153,6 +154,7 @@ public:
     virtual MavESP8266Vehicle*      getVehicle      () = 0;
     virtual MavESP8266GCS*          getGCS          () = 0;
     virtual MavESP8266Log*          getLogger       () = 0;
+    virtual MavOSD*                 getOSD          () = 0;
 };
 
 //---------------------------------------------------------------------------------

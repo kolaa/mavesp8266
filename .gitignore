@@ -3,3 +3,7 @@ platformio.sublime*
 platformio.pro*
 tests
 research
+
+/.pio/build/
+/.pio/libdeps/
+/.vscode

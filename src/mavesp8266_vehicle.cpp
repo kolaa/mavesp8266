@@ -65,6 +65,11 @@ MavESP8266Vehicle::begin(MavESP8266Bridge* forwardTo)
     Serial.setRxBufferSize(4096);
 }
 
+void
+MavESP8266Vehicle::InitOSD(MavOSD* osd) {
+    _osd = osd;
+}
+
 
 //---------------------------------------------------------------------------------
 //-- Read MavLink message from UAS
@@ -72,6 +77,7 @@ void
 MavESP8266Vehicle::readMessage()
 {
     if (_readMessage()) {
+        _osd->sendToOSD(&_msg, &_mav_status);
         _forwardTo->sendMessage(&_msg);
     }
     //-- Update radio status (1Hz)

@@ -41,6 +41,7 @@
 #include "mavesp8266_vehicle.h"
 #include "mavesp8266_httpd.h"
 #include "mavesp8266_component.h"
+#include "mavosd.h"
 
 #include <ESP8266mDNS.h>
 
@@ -83,6 +84,7 @@ MavESP8266Vehicle       Vehicle;
 MavESP8266Httpd         updateServer;
 MavESP8266UpdateImp     updateStatus;
 MavESP8266Log           Logger;
+MavOSD                  OSD;
 
 //---------------------------------------------------------------------------------
 //-- Accessors
@@ -93,6 +95,7 @@ public:
     MavESP8266Vehicle*      getVehicle      () { return &Vehicle;       }
     MavESP8266GCS*          getGCS          () { return &GCS;           }
     MavESP8266Log*          getLogger       () { return &Logger;        }
+    MavOSD*                 getOSD          () { return &OSD;           }
 };
 
 MavESP8266WorldImp      World;
@@ -143,8 +146,9 @@ void setup() {
     Serial1.begin(115200);
 #else
     //-- Initialized GPIO02 (Used for "Reset To Factory")
-    pinMode(GPIO02, INPUT_PULLUP);
-    attachInterrupt(GPIO02, reset_interrupt, FALLING);
+    //pinMode(GPIO02, INPUT_PULLUP);
+        
+    //attachInterrupt(GPIO02, reset_interrupt, FALLING);   
 #endif
     Logger.begin(2048);
 
@@ -182,7 +186,7 @@ void setup() {
         WiFi.encryptionType(AUTH_WPA2_PSK);
         WiFi.softAP(Parameters.getWifiSsid(), Parameters.getWifiPassword(), Parameters.getWifiChannel());
         localIP = WiFi.softAPIP();
-        wait_for_client();
+        //wait_for_client();
     }
 
     //-- Boost power to Max
@@ -201,6 +205,8 @@ void setup() {
     //-- I'm getting bogus IP from the DHCP server. Broadcasting for now.
     gcs_ip[3] = 255;
     GCS.begin(&Vehicle, gcs_ip);
+    OSD.begin();
+    Vehicle.InitOSD(&OSD);
     Vehicle.begin(&GCS);
     //-- Initialize Update Server
     updateServer.begin(&updateStatus);

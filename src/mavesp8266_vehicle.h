@@ -39,6 +39,7 @@
 #define MAVESP8266_VEHICLE_H
 
 #include "mavesp8266.h"
+#include "mavosd.h"
 
 class MavESP8266Vehicle : public MavESP8266Bridge {
 public:
@@ -50,6 +51,7 @@ public:
     int     sendMessage     (mavlink_message_t* message);
     int     sendMessageRaw   (uint8_t *buffer, int len);
     linkStatus* getStatus   ();
+    void    InitOSD(MavOSD* osd);    
 
 private:
     bool    _readMessage    ();
@@ -58,6 +60,7 @@ private:
 private:
     unsigned long           _queue_time;
     mavlink_message_t       _msg;
+    MavOSD*                 _osd;
 };
 
 #endif

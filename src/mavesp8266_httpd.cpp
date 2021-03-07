@@ -35,13 +35,12 @@
  * @author Gus Grubba <mavlink@grubba.com>
  */
 
+#include <ESP8266WebServer.h>
 #include "mavesp8266.h"
 #include "mavesp8266_httpd.h"
 #include "mavesp8266_parameters.h"
 #include "mavesp8266_gcs.h"
 #include "mavesp8266_vehicle.h"
-
-#include <ESP8266WebServer.h>
 
 const char PROGMEM kTEXTPLAIN[]  = "text/plain";
 const char PROGMEM kTEXTHTML[]   = "text/html";
@@ -338,8 +337,10 @@ static void handle_getStatus()
     if(!paramCRC[0]) {
         snprintf(paramCRC, sizeof(paramCRC), "%08X", getWorld()->getParameters()->paramHashCheck());
     }
-    linkStatus* gcsStatus = getWorld()->getGCS()->getStatus();
-    linkStatus* vehicleStatus = getWorld()->getVehicle()->getStatus();
+    linkStatus* gcsStatus = getWorld()->getGCS()->getStatus();    
+    linkStatus* vehicleStatus = getWorld()->getVehicle()->getStatus();    
+    uint32_t    osd_packets_sent = getWorld()->getOSD()->packets_sent;
+
     String message = FPSTR(kHEADER);
     message += "<p>Comm Status</p><table><tr><td width=\"240\">Packets Received from GCS</td><td>";
     message += gcsStatus->packets_received;
@@ -357,8 +358,10 @@ static void handle_getStatus()
     message += vehicleStatus->packets_lost;
     message += "</td></tr><tr><td>Vehicle Parse Errors</td><td>";
     message += vehicleStatus->parse_errors;
-    message += "</td></tr><tr><td>Radio Messages</td><td>";
+    message += "</td></tr><tr><td>XXX Radio Messages</td><td>";
     message += gcsStatus->radio_status_sent;
+    message += "</td></tr><tr><td>OSD Packets Sent</td><td>";
+    message += osd_packets_sent;    
     message += "</td></tr></table>";
     message += "<p>System Status</p><table>\n";
     message += "<tr><td width=\"240\">Flash Size</td><td>";
